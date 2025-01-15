@@ -11,6 +11,8 @@ import com.example.sensor.repositories.SensorRepository;
 import com.example.sensor.service.MeasurementService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -37,11 +39,11 @@ public class MeasurementServiceImpl implements MeasurementService {
     }
 
     @Override
-    public List<MeasurementResponseDto> findAll() {
-        return measurementRepository.findAll().stream()
-                .map(measurementMapper::toDto)
-                .toList();
+    public Page<MeasurementResponseDto> findAll(Pageable pageable) {
+        return measurementRepository.findAll(pageable)
+                .map(measurementMapper::toDto);
     }
+
 
     @Override
     public Integer rainyDaysCount() {
