@@ -8,6 +8,7 @@ import com.example.sensor.repositories.UserRepository;
 import com.example.sensor.service.SensorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +28,7 @@ public class SensorServiceImpl implements SensorService{
         log.info(sensorRequestDto.getName());
         Optional<Sensor> sensor = sensorRepository.findByName(sensorRequestDto.getName());
         if(sensor.isPresent())
-            throw new IllegalArgumentException("Sensor with this name is already created");
+            throw new DbNotFoundException(HttpStatus.CONFLICT.getReasonPhrase(), "Sensor with this name is already created");
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
         Sensor saveSensor = new Sensor();
         saveSensor.setName(sensorRequestDto.getName());
